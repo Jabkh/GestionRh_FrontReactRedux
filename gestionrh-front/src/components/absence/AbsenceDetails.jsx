@@ -6,20 +6,27 @@ import { fetchAbsenceById } from '../../store/absence/absenceSlice';
 const AbsenceDetails = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const absence = useSelector((state) => state.absence.currentAbsence);
+    const { currentAbsence: absence, loading, error } = useSelector((state) => state.absence);
 
     useEffect(() => {
         dispatch(fetchAbsenceById(id));
     }, [dispatch, id]);
 
-    if (!absence) {
+    if (loading) {
         return <div>Loading...</div>;
     }
 
-    return (
-        <div className="container">
-            <div className="card">
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
+    if (!absence) {
+        return <div>No absence found</div>;
+    }
+
+    return (
+        <div className="container mt-5">
+            <div className="card">
                 <div className="card-body">
                     <h5 className="card-title">Reason: {absence.reason}</h5>
                     <p className="card-text"><strong>Start Date:</strong> {absence.startDate}</p>

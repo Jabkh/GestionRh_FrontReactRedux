@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const baseURL = 'http://localhost:8080/api';
+
 const initialState = {
   employees: [],
   status: 'idle',
@@ -8,22 +10,22 @@ const initialState = {
 };
 
 export const fetchEmployees = createAsyncThunk('employees/fetchEmployees', async () => {
-  const response = await axios.get('/api/employees');
+  const response = await axios.get(baseURL + '/employees', {headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}});
   return response.data;
 });
 
 export const addEmployee = createAsyncThunk('employees/addEmployee', async (employee) => {
-  const response = await axios.post('/api/employees', employee);
+  const response = await axios.post(baseURL + '/employees', employee,{headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}});
   return response.data;
 });
 
 export const updateEmployee = createAsyncThunk('employees/updateEmployee', async ({ id, employee }) => {
-  const response = await axios.put(`/api/employees/${id}`, employee);
+  const response = await axios.put(baseURL+`/employees/${id}`, employee,{headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}});
   return response.data;
 });
 
 export const deleteEmployee = createAsyncThunk('employees/deleteEmployee', async (id) => {
-  await axios.delete(`/api/employees/${id}`);
+  await axios.delete(baseURL+`/api/employees/${id}`,{headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}});
   return id;
 });
 
